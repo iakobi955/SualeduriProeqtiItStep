@@ -1,0 +1,2 @@
+# SualeduriProeqtiItStep
+Sualeduri proeqtebi
