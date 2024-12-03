@@ -16,12 +16,12 @@ def display_word(word, guessed_letters):
 
 def get_guess(already_guessed):
     """
-    მომხმარებლისგან იღებს ახალ ასოს.
-    უზრუნველყოფს, რომ შეყვანილი ასო იყოს ვალიდური და არ განმეორდეს.
+    მომხმარებლისგან იღებს ახალ ასოს ან სრულ სიტყვას.
+    უზრუნველყოფს, რომ შეყვანილი ასო ან სიტყვა იყოს ვალიდური და არ განმეორდეს.
     """
     while True:
-        guess = input('Guess a letter: ').lower()
-        if len(guess) == 1 and guess.isalpha() and guess not in already_guessed:
+        guess = input('Guess a letter or the whole word: ').lower()
+        if guess.isalpha() and guess not in already_guessed:
             return guess
         print(f'Invalid input or already guessed. Try again.')
 
@@ -48,10 +48,21 @@ def play_hangman(total_score):
         print(f'Your score for this game: {score}')
         print(f'Total score: {total_score}\n')
 
-        # ახალი ასოს მიღება
+        # ახალი ასოს ან სიტყვის მიღება
         guess = get_guess(guessed_letters | incorrect_guesses)
 
-        if guess in word:
+        if len(guess) > 1:  # თუ მოთამაშე ცდილობს სიტყვის მთლიანად გამოცნობას
+            if guess == word:
+                print(f'Congratulations! You guessed the word: "{word}"!')
+                score += len(word) * 10  # სრულად გამოცნობისთვის ქულების დამატება
+                total_score += len(word) * 10
+                break
+            else:
+                print(f'Incorrect guess: "{guess}".')
+                incorrect_guesses.add(guess)
+                score -= 5
+                total_score -= 5
+        elif guess in word:
             guessed_letters.add(guess)  # გამოცნობილი ასოს დამატება
             points = word.count(guess) * 10
             score += points  # ქულების მომატება
